@@ -5,6 +5,9 @@ using UnityEngine.EventSystems;
 
 public class DragButton : MonoBehaviour, IDragHandler
 {
+    public Vector3 position;
+    public 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,12 +19,12 @@ public class DragButton : MonoBehaviour, IDragHandler
     {
         
     }
-    
 
     public void OnDrag(PointerEventData eventData)
     {
-        Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        position.z = 0;
-        transform.position = position;
+        position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        transform.position = new Vector3(position.x, position.y, 0);
     }
+
 }
