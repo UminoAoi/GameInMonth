@@ -27,4 +27,19 @@ public class DragButton : MonoBehaviour, IDragHandler
         transform.position = new Vector3(position.x, position.y, 0);
     }
 
+    public void OnClick()
+    {
+        if(transform.position.x > transform.localScale.x / 2)//only gray
+        {
+            Debug.Log("GRAY");
+        }
+        else if(-transform.position.x > transform.localScale.x / 2)//only color
+        {
+            Debug.Log("PINK");
+        }
+        else
+        {
+            Debug.Log("BOTH");
+        }
+    }
 }
