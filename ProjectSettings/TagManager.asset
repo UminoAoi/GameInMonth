@@ -9,6 +9,7 @@ TagManager:
   - CanInteractPINK
   - CanInteractGRAY
   - Platform
+  - Boss
   layers:
   - Default
   - TransparentFX

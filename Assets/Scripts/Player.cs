@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     bool isGround;
     bool isHolding;
+    bool isRight;
     GameObject holdingObject;
 
     // Start is called before the first frame update
@@ -30,12 +31,24 @@ public class Player : MonoBehaviour
 
         isGround = false;
         isHolding = false;
+        isRight = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float move = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        float direction = Input.GetAxis("Horizontal");
+        if (direction < 0 && isRight)
+        {
+            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            isRight = false;
+        }else if(direction > 0 && !isRight)
+        {
+            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            isRight = true;
+        }
+
+        float move = direction * speed * Time.deltaTime;
 
         rb.velocity = new Vector2(move, rb.velocity.y);
 
@@ -50,20 +63,11 @@ public class Player : MonoBehaviour
         {
             if (playerType == PlayerType.GRAY)
             {
-                holdingObject.transform.parent = null;
-                holdingObject.GetComponent<Rigidbody2D>().simulated = true;
-                holdingObject = null;
-                isHolding = false;
+                DropGray();
             }
             else
             {
-                Debug.Log("CAN");
-                holdingObject.transform.parent = null;
-                Rigidbody2D objectRb = holdingObject.GetComponent<Rigidbody2D>();
-                objectRb.simulated = true;
-                objectRb.velocity = new Vector2(transform.localScale.x, throwingForce);
-                holdingObject = null;
-                isHolding = false;
+                DropPink();
             }
         }
 
@@ -83,6 +87,12 @@ public class Player : MonoBehaviour
 
         if (objectThing.CompareTag("Platform"))
             isGround = false;
+
+        if ((objectThing.layer == 11 && playerType == PlayerType.GRAY) ||
+                (objectThing.layer == 10 && playerType == PlayerType.PINK))
+        {
+            Hurt();
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -94,14 +104,40 @@ public class Player : MonoBehaviour
             {
                 if (Input.GetKeyDown("space") && !isHolding)
                 {
-                    Debug.Log(holdingPosition);
-                    objectThing.transform.parent = transform;
-                    holdingObject = objectThing;
-                    isHolding = true;
-                    holdingObject.GetComponent<Rigidbody2D>().simulated = false;
-                    objectThing.transform.position = holdingPosition.position;
+                    PickItem(objectThing);
                 }
             }
+    }
+
+    void DropGray()
+    {
+        holdingObject.transform.parent = null;
+        holdingObject.GetComponent<Rigidbody2D>().simulated = true;
+        holdingObject = null;
+        isHolding = false;
+    }
+
+    void DropPink()
+    {
+        holdingObject.transform.parent = null;
+        Rigidbody2D objectRb = holdingObject.GetComponent<Rigidbody2D>();
+        objectRb.simulated = true;
+        objectRb.velocity = new Vector2(transform.localScale.x, throwingForce);
+        holdingObject = null;
+        isHolding = false;
+    }
+
+    void PickItem(GameObject objectThing)
+    {
+        objectThing.transform.parent = transform;
+        holdingObject = objectThing;
+        isHolding = true;
+        holdingObject.GetComponent<Rigidbody2D>().simulated = false;
+        holdingObject.layer = 8;
+        objectThing.transform.position = holdingPosition.position;
+    }
+
+    void Hurt() { 
     }
 
 }
