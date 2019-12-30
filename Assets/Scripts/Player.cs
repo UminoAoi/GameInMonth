@@ -6,10 +6,12 @@ public class Player : MonoBehaviour
 {
     public float speed = 10f;
     public float jumpSpeed = 10f;
-    public PlayerType playerType = PlayerType.GRAY;
+    PlayerType playerType;
+    public float throwingForce = 10;
 
+    public Transform holdingPosition;
     Rigidbody2D rb;
-    public bool isGround;
+    bool isGround;
     bool isHolding;
     GameObject holdingObject;
 
@@ -17,6 +19,15 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        if (this.CompareTag("PlayerPINK"))
+        {
+            playerType = PlayerType.PINK;
+        }
+        else
+        {
+            playerType = PlayerType.GRAY;
+        }
+
         isGround = false;
         isHolding = false;
     }
@@ -34,12 +45,26 @@ public class Player : MonoBehaviour
             isGround = false;
         }
 
-        if (Input.GetKeyDown("z") && isHolding)
+
+        if (Input.GetKeyDown("z") && isHolding) //upuszczenie rzeczy
         {
-            holdingObject.transform.parent = null;
-            holdingObject.GetComponent<Rigidbody2D>().simulated = true;
-            holdingObject = null;            
-            isHolding = false;
+            if (playerType == PlayerType.GRAY)
+            {
+                holdingObject.transform.parent = null;
+                holdingObject.GetComponent<Rigidbody2D>().simulated = true;
+                holdingObject = null;
+                isHolding = false;
+            }
+            else
+            {
+                Debug.Log("CAN");
+                holdingObject.transform.parent = null;
+                Rigidbody2D objectRb = holdingObject.GetComponent<Rigidbody2D>();
+                objectRb.simulated = true;
+                objectRb.velocity = new Vector2(transform.localScale.x, throwingForce);
+                holdingObject = null;
+                isHolding = false;
+            }
         }
 
     }
@@ -64,24 +89,19 @@ public class Player : MonoBehaviour
     {
         GameObject objectThing = collision.gameObject;
 
-        if (!objectThing.CompareTag("Untagged"))
-        {
-            if (playerType == PlayerType.GRAY && objectThing.CompareTag("CanInteractGRAY"))//podnoszenie rzeczy
+            if ((objectThing.CompareTag("CanInteractGRAY") && playerType == PlayerType.GRAY) || 
+                (objectThing.CompareTag("CanInteractPINK") && playerType == PlayerType.PINK))
             {
                 if (Input.GetKeyDown("space") && !isHolding)
                 {
+                    Debug.Log(holdingPosition);
                     objectThing.transform.parent = transform;
                     holdingObject = objectThing;
                     isHolding = true;
                     holdingObject.GetComponent<Rigidbody2D>().simulated = false;
-                    objectThing.transform.localPosition = new Vector2(transform.localScale.x/4,0);
+                    objectThing.transform.position = holdingPosition.position;
                 }
             }
-            else if (playerType == PlayerType.PINK && objectThing.CompareTag("CanInteractPINK"))//kopanie, wprawianie rzeczy w ruch
-            {
-
-            }
-        }
     }
 
 }

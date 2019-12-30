@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PlayerGRAY
+  - PlayerPINK
+  - CanInteractPINK
+  - CanInteractGRAY
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -13,7 +18,7 @@ TagManager:
   - UI
   - 
   - 
-  - TRYING
+  - ActionItems
   - 
   - 
   - 
@@ -41,7 +46,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: TRYING
+  - name: ActionItems
     uniqueID: 1908955
     locked: 0
   - name: rdtrfytgy
