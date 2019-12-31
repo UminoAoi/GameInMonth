@@ -11,6 +11,7 @@ public class Boss : MonoBehaviour
     public List<GameObject> bullets;
     public float throwingForce = 20;
 
+    int life = 10;
     GameObject nextBullet;
     int currentBullet = 0;
 
@@ -71,6 +72,29 @@ public class Boss : MonoBehaviour
             currentBullet = 0;
             nextBullet = bullets[0];
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject objectThing = collision.gameObject;
+
+        if (objectThing.layer == 8 )
+        {
+            if (life == 0)
+                Die();
+            Hurt();
+            Destroy(objectThing);
+        }
+    }
+
+    void Hurt()
+    {
+
+    }
+
+    void Die()
+    {
+
     }
 
 }
