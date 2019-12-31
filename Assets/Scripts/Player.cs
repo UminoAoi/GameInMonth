@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     PlayerType playerType;
     public float throwingForce = 10;
     public Transform holdingPosition;
+    public ParticleSystem blood;
 
     int life = 3;
     Rigidbody2D rb;
@@ -165,8 +166,10 @@ public class Player : MonoBehaviour
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         Color oldColor = sprite.color;
         sprite.color = Color.red;
+        blood.Play();
         yield return new WaitForSeconds(0.3f);
         sprite.color = oldColor;
+        blood.Stop();
     }
 }
 
