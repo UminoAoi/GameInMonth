@@ -8,8 +8,9 @@ public class Player : MonoBehaviour
     public float jumpSpeed = 10f;
     PlayerType playerType;
     public float throwingForce = 10;
-
     public Transform holdingPosition;
+
+    int life = 3;
     Rigidbody2D rb;
     bool isGround;
     bool isHolding;
@@ -79,6 +80,20 @@ public class Player : MonoBehaviour
 
         if(objectThing.CompareTag("Platform"))
             isGround = true;
+
+        if (objectThing.CompareTag("Boss"))
+        {
+            Die();
+        }
+
+        if ((objectThing.layer == 11 && playerType == PlayerType.GRAY) ||
+                (objectThing.layer == 10 && playerType == PlayerType.PINK))
+        {
+            if (life == 0)
+                Die();
+            Hurt();
+            Destroy(objectThing);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -88,11 +103,7 @@ public class Player : MonoBehaviour
         if (objectThing.CompareTag("Platform"))
             isGround = false;
 
-        if ((objectThing.layer == 11 && playerType == PlayerType.GRAY) ||
-                (objectThing.layer == 10 && playerType == PlayerType.PINK))
-        {
-            Hurt();
-        }
+        
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -137,9 +148,26 @@ public class Player : MonoBehaviour
         objectThing.transform.position = holdingPosition.position;
     }
 
-    void Hurt() { 
+    void Hurt() {
+        life--;
+        rb.velocity = new Vector2(15, 3);
+        StartCoroutine(Blink());
     }
 
+    void Die()
+    {
+        StartCoroutine(Blink());
+        rb.velocity = new Vector2(15, 3);
+    }
+
+    IEnumerator Blink()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color oldColor = sprite.color;
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.3f);
+        sprite.color = oldColor;
+    }
 }
 
 public enum PlayerType

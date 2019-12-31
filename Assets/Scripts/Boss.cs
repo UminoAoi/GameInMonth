@@ -9,8 +9,11 @@ public class Boss : MonoBehaviour
     public GameObject player;
     public MonsterType monsterType = MonsterType.BOTH;
     public List<GameObject> bullets;
+    public float throwingForce = 20;
+
     GameObject nextBullet;
     int currentBullet = 0;
+
 
     float timeSinceAttack;
     bool isRight;
@@ -52,7 +55,13 @@ public class Boss : MonoBehaviour
     void Attack()
     {
         nextBullet.transform.position = transform.position;
-        Instantiate(nextBullet);
+        GameObject bullet = Instantiate(nextBullet);
+        if(bullet.layer == 11)// różowy
+        {
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            bulletRb.velocity = new Vector2(transform.localScale.x, throwingForce);
+        }
+
         if(bullets.Count > currentBullet+1)
         {
             nextBullet = bullets[++currentBullet];

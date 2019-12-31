@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 937515406}
   - component: {fileID: 937515405}
   - component: {fileID: 937515409}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Circle
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -360,7 +360,10 @@ MonoBehaviour:
   attackTime: 5
   player: {fileID: 1063255469}
   monsterType: 2
-  bullets: []
+  bullets:
+  - {fileID: 2806962611887728113, guid: 7d589301b37cb3d4ab71223ddb43c9d4, type: 3}
+  - {fileID: 1856352338919888774, guid: 58f2af9d5852d5949be00bb6e63bf9a5, type: 3}
+  throwingForce: 20
 --- !u!1 &1063255469
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +694,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2053233517}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
