@@ -157,6 +157,7 @@ public class Player : MonoBehaviour
 
     void Die()
     {
+        //Camera shake
         StartCoroutine(Blink());
         rb.velocity = new Vector2(15, 3);
     }
@@ -170,6 +171,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         sprite.color = oldColor;
         blood.Stop();
+    }
+
+    public PlayerType GetPlayerType()
+    {
+        return playerType;
     }
 }
 

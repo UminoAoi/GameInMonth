@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    public float speed = 100;
+    public float normalSpeed = 100;
     public float attackTime = 5;
-    public MonsterType monsterType = MonsterType.BOTH;
     public List<GameObject> bullets;
     public float throwingForce = 20;
     public List<Transform> places;
+    public Player player;
+    public ParticleSystem blood;
+    public int angryAttacks = 4;
+
+    MonsterState monsterState;
+    int currentAngryAttacks = 0;
 
     int life = 10;
     GameObject nextBullet;
@@ -24,6 +29,7 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        monsterState = MonsterState.Normal;
         nextBullet = bullets[0];
         timeSinceAttack = 0;
         isRight = true;
@@ -34,12 +40,6 @@ public class Boss : MonoBehaviour
     void Update()
     {
         timeSinceAttack += Time.deltaTime;
-
-        if(timeSinceAttack > attackTime)
-        {
-            timeSinceAttack = 0;
-            Attack();
-        }
 
         if (transform.position.x - nextPlace.position.x > 0 && isRight)
         {
@@ -52,8 +52,28 @@ public class Boss : MonoBehaviour
             isRight = true;
         }
 
-        Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
-        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        switch (monsterState)
+        {
+            case MonsterState.Normal:
+                if (IfAttack(attackTime))
+                    Attack();
+                Move(normalSpeed);
+                break;
+            case MonsterState.Angry:
+                if(currentAngryAttacks >= angryAttacks && IfAttack(attackTime / 2))
+                {
+                    currentAngryAttacks = 0;
+                    Attack();
+                }else if (IfAttack(attackTime/2))
+                    AttackPlayer();
+                Move(normalSpeed * 2);
+                break;
+            case MonsterState.Tired:
+                if (IfAttack(attackTime))
+                    Attack();
+                Move(normalSpeed / 2);
+                break;
+        }
 
         if (Vector2.Distance(transform.position, nextPlace.position) < 0.3)
         {
@@ -64,12 +84,29 @@ public class Boss : MonoBehaviour
             else
             {
                 nextPlace = places[0];
+                currentPlace = 0;
             }
         }
+
+    }
+
+    void Move(float speed)
+    {
+        Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
+        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+    }
+
+    bool IfAttack(float attackTime)
+    {
+        if (timeSinceAttack > attackTime)
+            return true;
+        else
+            return false;
     }
 
     void Attack()
     {
+        timeSinceAttack = 0;
         nextBullet.transform.position = transform.position;
         GameObject bullet = Instantiate(nextBullet);
         if(bullet.layer == 11)// różowy
@@ -78,7 +115,41 @@ public class Boss : MonoBehaviour
             bulletRb.velocity = new Vector2(transform.localScale.x, throwingForce);
         }
 
-        if(bullets.Count > currentBullet+1)
+        TakeNextBullet();
+        
+    }
+
+    void AttackPlayer()
+    {
+        timeSinceAttack = 0;
+        PlayerType type = player.GetPlayerType();
+        GameObject bullet = null;
+        for(int i = 0; i< bullets.Count; i++)
+        {
+            if ((type == PlayerType.GRAY && bullets[i].CompareTag("CanInteractPINK")) ||
+                (type == PlayerType.PINK && bullets[i].CompareTag("CanInteractGRAY")))
+            {
+                bullet = bullets[i];
+                currentBullet = i;
+                break;
+            }
+        }
+        
+        bullet.transform.position = transform.position;
+        bullet = Instantiate(bullet);
+        if (bullet.layer == 11)// różowy
+        {
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            bulletRb.velocity = new Vector2(transform.localScale.x, throwingForce);
+        }
+
+        currentAngryAttacks++;
+        TakeNextBullet();
+    }
+
+    void TakeNextBullet()
+    {
+        if (bullets.Count > currentBullet + 1)
         {
             nextBullet = bullets[++currentBullet];
         }
@@ -104,19 +175,38 @@ public class Boss : MonoBehaviour
 
     void Hurt()
     {
-
+        life--;
+        StartCoroutine(Blink());
+        if (life % 3 == 1)
+            monsterState = MonsterState.Normal;
+        else if (life % 3 == 0)
+            monsterState = MonsterState.Angry;
+        else if (life % 3 == 2)
+            monsterState = MonsterState.Tired;
     }
 
     void Die()
     {
+        //Camera shake
+        StartCoroutine(Blink());
+    }
 
+    IEnumerator Blink()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color oldColor = sprite.color;
+        sprite.color = Color.red;
+        blood.Play();
+        yield return new WaitForSeconds(0.3f);
+        sprite.color = oldColor;
+        blood.Stop();
     }
 
 }
 
-public enum MonsterType
+public enum MonsterState
 {
-    GRAY,
-    PINK,
-    BOTH
+    Normal,
+    Angry,
+    Tired
 }
