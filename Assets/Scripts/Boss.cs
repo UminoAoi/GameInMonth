@@ -12,7 +12,9 @@ public class Boss : MonoBehaviour
     public Player player;
     public ParticleSystem blood;
     public int angryAttacks = 4;
-    public int life = 10;
+    public int life = 1;
+
+    public List<GameObject> prizes;
 
     MonsterState monsterState;
     int currentAngryAttacks = 0;
@@ -208,6 +210,7 @@ public class Boss : MonoBehaviour
     IEnumerator BlinkDead()
     {
         normalSpeed = 0;
+        attackTime = float.MaxValue;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         Color oldColor = sprite.color;
         for(int i = 0; i<4; i++)
@@ -218,8 +221,21 @@ public class Boss : MonoBehaviour
             sprite.color = oldColor;
             blood.Stop();
         }
+        PushOutPrizes();
         Destroy(gameObject);
         
+    }
+
+    void PushOutPrizes()
+    {
+        foreach(GameObject prize in prizes)
+        {
+            prize.transform.position = transform.position;
+            GameObject prizeObject =  Instantiate(prize);
+            Rigidbody2D prizeRb = prizeObject.GetComponent<Rigidbody2D>();
+            int random = Random.Range(-2, 2);
+            prizeRb.velocity = new Vector2(transform.localScale.x*random, 3);
+        }
     }
 
 }

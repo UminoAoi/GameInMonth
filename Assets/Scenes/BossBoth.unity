@@ -430,6 +430,10 @@ MonoBehaviour:
   blood: {fileID: 1994540546}
   angryAttacks: 4
   life: 1
+  prizes:
+  - {fileID: 2806962611887728113, guid: 7d589301b37cb3d4ab71223ddb43c9d4, type: 3}
+  - {fileID: 1856352338919888774, guid: 58f2af9d5852d5949be00bb6e63bf9a5, type: 3}
+  - {fileID: 2806962611887728113, guid: 7d589301b37cb3d4ab71223ddb43c9d4, type: 3}
 --- !u!1 &1063255469
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,7 +449,7 @@ GameObject:
   - component: {fileID: 1063255473}
   m_Layer: 0
   m_Name: Circle (1)
-  m_TagString: PlayerPINK
+  m_TagString: PlayerGRAY
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -505,7 +509,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1452019ff2247b04da13251ef672b908, type: 3}
-  m_Color: {r: 1, g: 0.6933962, b: 0.6933962, a: 1}
+  m_Color: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
