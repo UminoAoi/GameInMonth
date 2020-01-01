@@ -12,11 +12,11 @@ public class Boss : MonoBehaviour
     public Player player;
     public ParticleSystem blood;
     public int angryAttacks = 4;
+    public int life = 10;
 
     MonsterState monsterState;
     int currentAngryAttacks = 0;
-
-    int life = 10;
+    
     GameObject nextBullet;
     int currentBullet = 0;
 
@@ -188,11 +188,13 @@ public class Boss : MonoBehaviour
     void Die()
     {
         //Camera shake
-        StartCoroutine(Blink());
+        StartCoroutine(BlinkDead());
     }
 
     IEnumerator Blink()
     {
+        float tmp = normalSpeed;
+        normalSpeed = 0;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         Color oldColor = sprite.color;
         sprite.color = Color.red;
@@ -200,6 +202,24 @@ public class Boss : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         sprite.color = oldColor;
         blood.Stop();
+        normalSpeed = tmp;
+    }
+
+    IEnumerator BlinkDead()
+    {
+        normalSpeed = 0;
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color oldColor = sprite.color;
+        for(int i = 0; i<4; i++)
+        {
+            sprite.color = Color.red;
+            blood.Play();
+            yield return new WaitForSeconds(0.5f);
+            sprite.color = oldColor;
+            blood.Stop();
+        }
+        Destroy(gameObject);
+        
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -160,6 +161,8 @@ public class Player : MonoBehaviour
         //Camera shake
         StartCoroutine(Blink());
         rb.velocity = new Vector2(15, 3);
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
     }
 
     IEnumerator Blink()
