@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     public float speed = 10f;
     public float jumpSpeed = 10f;
     PlayerType playerType;
-    public float throwingForce = 10;
+    public float throwingForce = 8;
     public Transform holdingPosition;
     public ParticleSystem blood;
 
