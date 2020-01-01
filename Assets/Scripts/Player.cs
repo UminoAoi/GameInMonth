@@ -11,8 +11,7 @@ public class Player : MonoBehaviour
     public float throwingForce = 8;
     public Transform holdingPosition;
     public ParticleSystem blood;
-
-    int life = 3;
+    
     Rigidbody2D rb;
     bool isGround;
     bool isHolding;
@@ -91,7 +90,7 @@ public class Player : MonoBehaviour
         if ((objectThing.layer == 11 && playerType == PlayerType.GRAY) ||
                 (objectThing.layer == 10 && playerType == PlayerType.PINK))
         {
-            if (life == 1)
+            if (PlayerStateManager.GetLife() == 1)
                 Die();
             Hurt();
             Destroy(objectThing);
@@ -151,7 +150,7 @@ public class Player : MonoBehaviour
     }
 
     void Hurt() {
-        life--;
+        PlayerStateManager.SubstractLife(1);
         rb.velocity = new Vector2(15, 3);
         StartCoroutine(Blink());
     }
