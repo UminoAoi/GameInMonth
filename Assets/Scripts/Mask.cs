@@ -46,8 +46,8 @@ public class Mask : MonoBehaviour
         {
             if (moving)
             {
-                transform.position = Vector3.Lerp(transform.position, nextPlace.position, moveSpeed * Time.deltaTime);
-                if (transform.position == nextPlace.position)
+                transform.position = Vector3.MoveTowards(transform.position, nextPlace.position, moveSpeed * Time.deltaTime);
+                if (Vector2.Distance(transform.position, nextPlace.position) < 0.3)
                 {
                     if (movingPlaces.Count == currentPosition + 1)
                     {
@@ -82,12 +82,17 @@ public class Mask : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!changeStarted)
+        GameObject objectThing = collision.gameObject;
+
+        if (!changeStarted )
         {
             triangle.transform.position = collision.gameObject.transform.position;
             changeStarted = true;
         }
-        touching = true;
+
+        if((objectThing.CompareTag("PlayerGRAY") && maskType == MaskType.PINK) ||
+           (objectThing.CompareTag("PlayerPINK") && maskType == MaskType.GRAY))
+            touching = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)

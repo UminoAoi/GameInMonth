@@ -6,15 +6,17 @@ public class Boss : MonoBehaviour
 {
     public float speed = 100;
     public float attackTime = 5;
-    public GameObject player;
     public MonsterType monsterType = MonsterType.BOTH;
     public List<GameObject> bullets;
     public float throwingForce = 20;
+    public List<Transform> places;
 
     int life = 10;
     GameObject nextBullet;
     int currentBullet = 0;
 
+    Transform nextPlace;
+    int currentPlace = 0;
 
     float timeSinceAttack;
     bool isRight;
@@ -25,6 +27,7 @@ public class Boss : MonoBehaviour
         nextBullet = bullets[0];
         timeSinceAttack = 0;
         isRight = true;
+        nextPlace = places[0];
     }
 
     // Update is called once per frame
@@ -38,19 +41,31 @@ public class Boss : MonoBehaviour
             Attack();
         }
 
-        if (transform.position.x - player.transform.position.x > 0 && isRight)
+        if (transform.position.x - nextPlace.position.x > 0 && isRight)
         {
             transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
             isRight = false;
         }
-        else if (transform.position.x - player.transform.position.x < 0 && !isRight)
+        else if (transform.position.x - nextPlace.position.x < 0 && !isRight)
         {
             transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
             isRight = true;
         }
 
-        Vector2 target = new Vector2(player.transform.position.x, transform.position.y);
+        Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
         transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+
+        if (Vector2.Distance(transform.position, nextPlace.position) < 0.3)
+        {
+            if(places.Count > currentPlace + 1)
+            {
+                nextPlace = places[++currentPlace];
+            }
+            else
+            {
+                nextPlace = places[0];
+            }
+        }
     }
 
     void Attack()
@@ -80,7 +95,7 @@ public class Boss : MonoBehaviour
 
         if (objectThing.layer == 8 )
         {
-            if (life == 0)
+            if (life == 1)
                 Die();
             Hurt();
             Destroy(objectThing);

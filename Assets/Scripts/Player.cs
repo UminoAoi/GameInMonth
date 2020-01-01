@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
         if ((objectThing.layer == 11 && playerType == PlayerType.GRAY) ||
                 (objectThing.layer == 10 && playerType == PlayerType.PINK))
         {
-            if (life == 0)
+            if (life == 1)
                 Die();
             Hurt();
             Destroy(objectThing);
