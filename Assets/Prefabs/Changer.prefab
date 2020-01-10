@@ -119,7 +119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d514966f90d89044bbb7c71f8a403f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPINK: {fileID: 7443999085240660312, guid: 95d02ea1873af7e4daca7df23115e5d3,
+  playerPINK: {fileID: 6996151330230456268, guid: 95d02ea1873af7e4daca7df23115e5d3,
     type: 3}
-  playerGRAY: {fileID: 7632471138639672300, guid: 4b5a0c8abbefff6409d2599f492ebf56,
-    type: 3}
+  playerGRAY: {fileID: 18, guid: 4b5a0c8abbefff6409d2599f492ebf56, type: 3}
