@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class DragButton : MonoBehaviour, IDragHandler
 {
     public Vector3 position;
-    public 
 
     // Start is called before the first frame update
     void Start()
@@ -32,14 +32,17 @@ public class DragButton : MonoBehaviour, IDragHandler
         if(transform.position.x > transform.localScale.x / 2)//only gray
         {
             Debug.Log("GRAY");
+            SceneManager.LoadScene("LevelGray");
         }
         else if(-transform.position.x > transform.localScale.x / 2)//only color
         {
             Debug.Log("PINK");
+            SceneManager.LoadScene("LevelColor");
         }
         else
         {
             Debug.Log("BOTH");
+            SceneManager.LoadScene("LevelBoth");
         }
     }
 }

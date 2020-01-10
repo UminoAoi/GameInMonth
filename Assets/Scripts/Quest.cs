@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class Quest
 {
-    // Start is called before the first frame update
-    void Start()
+    string description;
+    Dictionary<CollectableNames, int> goals;
+
+    public Quest(string description, Dictionary<CollectableNames, int> goals)
     {
-        
+        this.description = description;
+        this.goals = goals;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool checkIfDone()
     {
-        
+        if (PlayerStateManager.GetInventorySize() == 0)
+            return false;
+
+        foreach(KeyValuePair<CollectableNames,int> pair in goals)
+        {
+            if (!PlayerStateManager.CheckInventory(pair.Key, pair.Value))
+                return false;
+        }
+        return true;
+    }
+
+    public string GetDescription()
+    {
+        return description;
     }
 }

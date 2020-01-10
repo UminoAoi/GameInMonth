@@ -18,10 +18,12 @@ public class Player : MonoBehaviour
     bool isRight;
     GameObject holdingObject;
 
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         if (this.CompareTag("PlayerPINK"))
         {
             playerType = PlayerType.PINK;
@@ -51,7 +53,7 @@ public class Player : MonoBehaviour
         }
 
         float move = direction * speed * Time.deltaTime;
-
+        //Debug.Log(move);
         rb.velocity = new Vector2(move, rb.velocity.y);
 
         if (Input.GetKeyDown("up") && isGround)
@@ -78,9 +80,8 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject objectThing = collision.gameObject;
-
-        if(objectThing.CompareTag("Platform"))
-            isGround = true;
+        
+        isGround = true;
 
         if (objectThing.CompareTag("Boss"))
         {

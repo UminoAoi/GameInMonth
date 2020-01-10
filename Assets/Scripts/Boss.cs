@@ -9,14 +9,13 @@ public class Boss : MonoBehaviour
     public List<GameObject> bullets;
     public float throwingForce = 20;
     public List<Transform> places;
-    public Player player;
     public ParticleSystem blood;
     public int angryAttacks = 4;
     public int life = 1;
 
     public List<GameObject> prizes;
 
-    MonsterState monsterState;
+    public MonsterState monsterState;
     int currentAngryAttacks = 0;
     
     GameObject nextBullet;
@@ -124,6 +123,10 @@ public class Boss : MonoBehaviour
     void AttackPlayer()
     {
         timeSinceAttack = 0;
+        GameObject playerObject = GameObject.FindGameObjectWithTag("PlayerPINK");
+        if(playerObject == null)
+            playerObject = GameObject.FindGameObjectWithTag("PlayerGRAY");
+        Player player = playerObject.GetComponent<Player>();
         PlayerType type = player.GetPlayerType();
         GameObject bullet = null;
         for(int i = 0; i< bullets.Count; i++)
@@ -165,6 +168,8 @@ public class Boss : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject objectThing = collision.gameObject;
+        if (objectThing.CompareTag("Platform"))
+            Debug.Log("PLATFORM");
 
         if (objectThing.layer == 8 )
         {

@@ -25,6 +25,8 @@ public class Mask : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        enabled = false;
+
         touching = false;
         changeStarted = false;
         if (maskType == MaskType.PINK)
@@ -84,7 +86,8 @@ public class Mask : MonoBehaviour
     {
         GameObject objectThing = collision.gameObject;
 
-        if (!changeStarted )
+        if (!changeStarted && ((objectThing.CompareTag("PlayerGRAY") && maskType == MaskType.PINK) ||
+           (objectThing.CompareTag("PlayerPINK") && maskType == MaskType.GRAY)))
         {
             triangle.transform.position = collision.gameObject.transform.position;
             changeStarted = true;
@@ -98,6 +101,16 @@ public class Mask : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         touching = false;
+    }
+
+    private void OnBecameInvisible()
+    {
+        enabled = false;
+    }
+
+    private void OnBecameVisible()
+    {
+        enabled = true;
     }
 }
 
