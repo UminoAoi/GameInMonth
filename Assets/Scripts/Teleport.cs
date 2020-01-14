@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 public class Teleport : MonoBehaviour
 {
     public Scene teleportTo;
+    public Animator animator;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        animator.SetTrigger("Out");
         SceneManager.LoadScene(teleportTo.handle);
     }
 }
