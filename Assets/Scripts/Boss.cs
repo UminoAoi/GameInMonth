@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : MonoBehaviour
+public class Boss : Enemy
 {
     public float normalSpeed = 100;
-    public float attackTime = 5;
-    public List<GameObject> bullets;
-    public float throwingForce = 20;
+    
     public List<Transform> places;
-    public ParticleSystem blood;
     public int angryAttacks = 4;
-    public int life = 1;
-
-    public List<GameObject> prizes;
 
     public MonsterState monsterState;
     int currentAngryAttacks = 0;
@@ -30,6 +24,7 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        type = EnemyType.NONE;
         monsterState = MonsterState.Normal;
         nextBullet = bullets[0];
         timeSinceAttack = 0;
@@ -75,10 +70,15 @@ public class Boss : MonoBehaviour
                 Move(normalSpeed / 2);
                 break;
         }
+    }
 
+    void Move(float speed)
+    {
+        Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
+        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
         if (Vector2.Distance(transform.position, nextPlace.position) < 0.3)
         {
-            if(places.Count > currentPlace + 1)
+            if (places.Count > currentPlace + 1)
             {
                 nextPlace = places[++currentPlace];
             }
@@ -88,36 +88,6 @@ public class Boss : MonoBehaviour
                 currentPlace = 0;
             }
         }
-
-    }
-
-    void Move(float speed)
-    {
-        Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
-        transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
-    }
-
-    bool IfAttack(float attackTime)
-    {
-        if (timeSinceAttack > attackTime)
-            return true;
-        else
-            return false;
-    }
-
-    void Attack()
-    {
-        timeSinceAttack = 0;
-        nextBullet.transform.position = transform.position;
-        GameObject bullet = Instantiate(nextBullet);
-        if(bullet.layer == 11)// różowy
-        {
-            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
-            bulletRb.velocity = new Vector2(transform.localScale.x, throwingForce);
-        }
-
-        TakeNextBullet();
-        
     }
 
     void AttackPlayer()
@@ -152,35 +122,13 @@ public class Boss : MonoBehaviour
         TakeNextBullet();
     }
 
-    void TakeNextBullet()
-    {
-        if (bullets.Count > currentBullet + 1)
-        {
-            nextBullet = bullets[++currentBullet];
-        }
-        else
-        {
-            currentBullet = 0;
-            nextBullet = bullets[0];
-        }
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject objectThing = collision.gameObject;
-        if (objectThing.CompareTag("Platform"))
-            Debug.Log("PLATFORM");
-
-        if (objectThing.layer == 8 )
-        {
-            if (life == 1)
-                Die();
-            Hurt();
-            Destroy(objectThing);
-        }
+        CollideWithObject(objectThing);
     }
 
-    void Hurt()
+    new void Hurt()
     {
         life--;
         StartCoroutine(Blink());
@@ -192,13 +140,7 @@ public class Boss : MonoBehaviour
             monsterState = MonsterState.Tired;
     }
 
-    void Die()
-    {
-        //Camera shake
-        StartCoroutine(BlinkDead());
-    }
-
-    IEnumerator Blink()
+    new IEnumerator Blink()
     {
         float tmp = normalSpeed;
         normalSpeed = 0;
@@ -214,11 +156,10 @@ public class Boss : MonoBehaviour
 
     IEnumerator BlinkDead()
     {
-        normalSpeed = 0;
         attackTime = float.MaxValue;
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         Color oldColor = sprite.color;
-        for(int i = 0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             sprite.color = Color.red;
             blood.Play();
@@ -228,21 +169,8 @@ public class Boss : MonoBehaviour
         }
         PushOutPrizes();
         Destroy(gameObject);
-        
-    }
 
-    void PushOutPrizes()
-    {
-        foreach(GameObject prize in prizes)
-        {
-            prize.transform.position = transform.position;
-            GameObject prizeObject =  Instantiate(prize);
-            Rigidbody2D prizeRb = prizeObject.GetComponent<Rigidbody2D>();
-            int random = Random.Range(-2, 2);
-            prizeRb.velocity = new Vector2(transform.localScale.x*random, 3);
-        }
     }
-
 }
 
 public enum MonsterState

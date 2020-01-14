@@ -36,8 +36,7 @@ public class Inventory : MonoBehaviour
         int i = 0;
 
         foreach (KeyValuePair<CollectableNames, int> pair in PlayerStateManager.GetInventory())
-        {
-            Debug.Log(pair);
+        { 
             GameObject item = Instantiate(itemPrefab);
             List<TextMeshProUGUI> tmChildren = new List<TextMeshProUGUI>();
 

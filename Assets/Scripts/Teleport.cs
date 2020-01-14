@@ -10,7 +10,9 @@ public class Teleport : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        StartCoroutine(LoadScene(teleportTo));
+        GameObject player = collision.gameObject;
+        if (player.CompareTag("PlayerPINK") || player.CompareTag("PlayerGRAY"))
+            StartCoroutine(LoadScene(teleportTo));
     }
 
     public IEnumerator LoadScene(Scene scene)

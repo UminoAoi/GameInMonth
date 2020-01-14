@@ -20,7 +20,7 @@ TagManager:
   - 
   - 
   - ActionItems
-  - Boss
+  - Enemy
   - BulletsGRAY
   - BulletsPINK
   - Platforms
