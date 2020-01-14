@@ -10,7 +10,13 @@ public class Teleport : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        StartCoroutine(LoadScene(teleportTo));
+    }
+
+    public IEnumerator LoadScene(Scene scene)
+    {
         animator.SetTrigger("Out");
-        SceneManager.LoadScene(teleportTo.handle);
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(scene.handle);
     }
 }

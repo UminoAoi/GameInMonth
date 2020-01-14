@@ -7,18 +7,7 @@ using UnityEngine.SceneManagement;
 public class DragButton : MonoBehaviour, IDragHandler
 {
     public Vector3 position;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Animator animator;
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -32,17 +21,24 @@ public class DragButton : MonoBehaviour, IDragHandler
         if(transform.position.x > transform.localScale.x / 2)//only gray
         {
             Debug.Log("GRAY");
-            SceneManager.LoadScene("LevelGray");
+            StartCoroutine(LoadScene("LevelGray"));
         }
         else if(-transform.position.x > transform.localScale.x / 2)//only color
         {
             Debug.Log("PINK");
-            SceneManager.LoadScene("LevelColor");
+            StartCoroutine(LoadScene("LevelColor"));
         }
         else
         {
             Debug.Log("BOTH");
-            SceneManager.LoadScene("LevelBoth");
+            StartCoroutine(LoadScene("LevelBoth"));
         }
+    }
+
+    public IEnumerator LoadScene(string scene)
+    {
+        animator.SetTrigger("Out");
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(scene);
     }
 }
