@@ -16,6 +16,6 @@ public class CameraFollow : MonoBehaviour
             playerObject = GameObject.FindGameObjectWithTag("PlayerGRAY");
 
         Vector3 target = new Vector3(playerObject.transform.position.x + offset.x, transform.position.y + offset.y, offset.z);
-        transform.position = Vector3.MoveTowards(transform.position, target, speed*Time.deltaTime);
+        transform.localPosition = Vector3.MoveTowards(transform.position, target, speed*Time.deltaTime);
     }
 }

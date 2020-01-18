@@ -313,7 +313,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 9187404476091701867}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.8235294
+  m_Size: 0.99977213
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -541,6 +541,7 @@ MonoBehaviour:
   scrollViewItems: {fileID: 9187404476870376127}
   itemPrefab: {fileID: 2675444090446060165, guid: 5bb907cf07eedb1489cbb8ecc52aa07b,
     type: 3}
+  itemPositionY: -30
 --- !u!1 &9187404475893235129
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +601,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 999
+  m_SortingOrder: 9999
   m_TargetDisplay: 0
 --- !u!114 &9187404475893235079
 MonoBehaviour:
@@ -1125,7 +1126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.089267135}
+  m_AnchoredPosition: {x: 0, y: 0.0000049496803}
   m_SizeDelta: {x: 420, y: 30}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &9187404476895759704
