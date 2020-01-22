@@ -44,7 +44,7 @@ public class PlayerStateManager
 
     public static bool CheckInventory(CollectableNames objectThing, int number)
     {
-        if (inventory.ContainsKey(objectThing) && inventory[objectThing] == number)
+        if (inventory.ContainsKey(objectThing) && inventory[objectThing] >= number)
             return true;
         else
             return false;
@@ -60,4 +60,10 @@ public class PlayerStateManager
         return inventory;
     }
 
+    public static void Reset()
+    {
+        playerLife = 3;
+        inventory = new Dictionary<CollectableNames, int>();
+        playersQuests = new List<Quest>();
+    }
 }

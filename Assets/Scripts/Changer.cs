@@ -6,6 +6,7 @@ public class Changer : MonoBehaviour
 {
     public GameObject playerPINK;
     public GameObject playerGRAY;
+    public Animator animator;
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -13,7 +14,8 @@ public class Changer : MonoBehaviour
         {
             GameObject player = collision.gameObject;
             Vector2 position = player.transform.position;
-        
+            animator.SetTrigger("change");
+
             if (player.CompareTag("PlayerPINK"))
             {
                 playerGRAY.transform.position = position;

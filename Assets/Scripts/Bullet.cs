@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float timeAfterDestroy = 10;
+    public float timeAfterDestroy = 5;
     float currentTime = 0;
 
     private void Update()
@@ -13,9 +13,5 @@ public class Bullet : MonoBehaviour
         if (currentTime > timeAfterDestroy && gameObject.layer != 8)
             Destroy(gameObject);
     }
-
-    private void OnBecameInvisible()
-    {
-        Destroy(gameObject);
-    }
+    
 }

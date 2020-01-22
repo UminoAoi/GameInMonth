@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : Enemy
+public class Boss : MonoBehaviour
 {
     public float normalSpeed = 100;
     
@@ -20,6 +20,15 @@ public class Boss : Enemy
 
     float timeSinceAttack;
     bool isRight;
+
+    public float attackTime = 5;
+    public List<GameObject> bullets;
+    public float throwingForce = 20;
+    public ParticleSystem blood;
+    public int life = 1;
+    public List<GameObject> prizes;
+    
+    public EnemyType type;
 
     // Start is called before the first frame update
     void Start()
@@ -72,6 +81,14 @@ public class Boss : Enemy
         }
     }
 
+    public bool IfAttack(float attackTime)
+    {
+        if (timeSinceAttack > attackTime)
+            return true;
+        else
+            return false;
+    }
+
     void Move(float speed)
     {
         Vector2 target = new Vector2(nextPlace.position.x, transform.position.y);
@@ -87,6 +104,34 @@ public class Boss : Enemy
                 nextPlace = places[0];
                 currentPlace = 0;
             }
+        }
+    }
+
+    void Attack()
+    {
+        timeSinceAttack = 0;
+        nextBullet.transform.position = transform.position;
+        GameObject bullet = Instantiate(nextBullet);
+        if (bullet.layer == 11)// różowy
+        {
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            bulletRb.velocity = new Vector2(transform.localScale.x, throwingForce);
+        }
+
+        TakeNextBullet();
+
+    }
+
+    public void TakeNextBullet()
+    {
+        if (bullets.Count > currentBullet + 1)
+        {
+            nextBullet = bullets[++currentBullet];
+        }
+        else
+        {
+            currentBullet = 0;
+            nextBullet = bullets[0];
         }
     }
 
@@ -128,7 +173,18 @@ public class Boss : Enemy
         CollideWithObject(objectThing);
     }
 
-    new void Hurt()
+    public void CollideWithObject(GameObject objectThing)
+    {
+        if (objectThing.layer == 8)
+        {
+                if (life == 1)
+                    Die();
+                Hurt();
+                Destroy(objectThing);
+        }
+    }
+
+    void Hurt()
     {
         life--;
         StartCoroutine(Blink());
@@ -140,7 +196,7 @@ public class Boss : Enemy
             monsterState = MonsterState.Tired;
     }
 
-    new IEnumerator Blink()
+    IEnumerator Blink()
     {
         float tmp = normalSpeed;
         normalSpeed = 0;
@@ -152,6 +208,12 @@ public class Boss : Enemy
         sprite.color = oldColor;
         blood.Stop();
         normalSpeed = tmp;
+    }
+
+    void Die()
+    {
+        //Camera shake
+        StartCoroutine(BlinkDead());
     }
 
     IEnumerator BlinkDead()
@@ -170,6 +232,18 @@ public class Boss : Enemy
         PushOutPrizes();
         Destroy(gameObject);
 
+    }
+
+    public void PushOutPrizes()
+    {
+        foreach (GameObject prize in prizes)
+        {
+            prize.transform.position = transform.position;
+            GameObject prizeObject = Instantiate(prize);
+            Rigidbody2D prizeRb = prizeObject.GetComponent<Rigidbody2D>();
+            int random = Random.Range(-2, 2);
+            prizeRb.velocity = new Vector2(transform.localScale.x * random, 3);
+        }
     }
 }
 

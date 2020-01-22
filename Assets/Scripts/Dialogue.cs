@@ -27,7 +27,6 @@ public class Dialogue : MonoBehaviour
 
     public void SetButtonsInactive()
     {
-        //EventSystem.current.SetSelectedGameObject(null);
         buttonNo.gameObject.SetActive(false);
         buttonYes.gameObject.SetActive(false);
     }

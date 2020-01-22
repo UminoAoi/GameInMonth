@@ -13,36 +13,44 @@ public class NPC : MonoBehaviour
     int currentThankText = 1;
     Quest activeQuest;
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isActiveQuest) {
-            dialogue.SetText(texts[currentText]);
-            dialogue.SetDialogueVisible(true);
-            dialogue.SetButtonYes(ButtonAction.Next);
-        }
-        else
+        if (collision.gameObject.layer == 14)
         {
-            if (!activeQuest.checkIfDone())
+            if (!isActiveQuest)
             {
-                dialogue.SetText(thankTexts[0]);
-                dialogue.SetDialogueVisible(true);
-                dialogue.SetButtonNo(ButtonAction.Close);
-            }
-            else
-            {
-                dialogue.SetText(thankTexts[currentThankText]);
+                dialogue.SetText(texts[currentText]);
                 dialogue.SetDialogueVisible(true);
                 dialogue.SetButtonYes(ButtonAction.Next);
             }
-            
+            else
+            {
+                if (!activeQuest.checkIfDone())
+                {
+                    dialogue.SetText(thankTexts[0]);
+                    dialogue.SetDialogueVisible(true);
+                    dialogue.SetButtonNo(ButtonAction.Close);
+                }
+                else
+                {
+                    dialogue.SetText(thankTexts[currentThankText]);
+                    dialogue.SetDialogueVisible(true);
+                    dialogue.SetButtonYes(ButtonAction.Next);
+                }
+
+            }
         }
 
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Reset();
-        dialogue.SetAllInactive();
+        if (collision.gameObject.layer == 14)
+        {
+            Reset();
+            dialogue.SetAllInactive();
+        }
     }
 
     public void NextDialogue()

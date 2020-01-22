@@ -13,15 +13,17 @@ public class Player : MonoBehaviour
     public ParticleSystem blood;
     
     Rigidbody2D rb;
-    bool isGround;
+    public bool isGround;
     bool isHolding;
     bool isRight;
     GameObject holdingObject;
 
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
         if (this.CompareTag("PlayerPINK"))
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
             playerType = PlayerType.GRAY;
         }
 
-        isGround = false;
+        isGround = true;
         isHolding = false;
         isRight = true;
     }
@@ -60,11 +62,15 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(new Vector2(0, jumpSpeed));
             isGround = false;
+            animator.SetBool("jump", true);
         }
+
+        animator.SetFloat("jumpSpeed", rb.velocity.y);
 
 
         if (Input.GetKeyDown("z") && isHolding) //upuszczenie rzeczy
         {
+            animator.SetTrigger("put");
             if (playerType == PlayerType.GRAY)
             {
                 DropGray();
@@ -80,8 +86,12 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject objectThing = collision.gameObject;
-        
-        isGround = true;
+
+        if (!isGround)
+        {
+            isGround = true;
+            animator.SetBool("jump", false);
+        }
 
         if (objectThing.CompareTag("Boss"))
         {
@@ -98,15 +108,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        GameObject objectThing = collision.gameObject;
-
-        if (objectThing.CompareTag("Platform"))
-            isGround = false;
-
-        
-    }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -115,9 +116,11 @@ public class Player : MonoBehaviour
             if ((objectThing.CompareTag("CanInteractGRAY") && playerType == PlayerType.GRAY) || 
                 (objectThing.CompareTag("CanInteractPINK") && playerType == PlayerType.PINK))
             {
+            
                 if (Input.GetKeyDown("space") && !isHolding)
                 {
-                    PickItem(objectThing);
+                animator.SetTrigger("pick");
+                PickItem(objectThing);
                 }
             }
     }
@@ -162,6 +165,7 @@ public class Player : MonoBehaviour
         StartCoroutine(Blink());
         rb.velocity = new Vector2(15, 3);
         Scene scene = SceneManager.GetActiveScene();
+        PlayerStateManager.Reset();
         SceneManager.LoadScene(scene.name);
     }
 

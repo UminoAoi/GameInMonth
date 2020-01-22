@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
             return false;
     }
 
-    public void Attack()
+    void Attack()
     {
         timeSinceAttack = 0;
         nextBullet.transform.position = transform.position;
